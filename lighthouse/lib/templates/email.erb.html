@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title></title>
+</head>
+<body>
+  <style type="text/css" media="screen">
+    body {font-family: Helvetica, Arial, sans-serif;}
+    h1 {padding: 10px; font-weight: bold; color: #ffffff;}
+    h1.high {background: #cc0000;}
+    h1.normal {background: #D4D400;}
+    h1.closed {background: blue;}
+    dl, p {margin-bottom: 20px;}
+    dt {background: #ffffcc;padding: 5px;font-weight: normal;margin: 20px 0 10px 0;}
+    dd {padding: 0 10px;margin: 0;}
+    dd.last {margin: 10px 0; padding-bottom: 10px;border-bottom: 1px solid #ccc;}
+    a {color: #ff6600;}
+    a:hover {color: #fff; background: #ff6600;}
+    dd.last a {padding: 5px 0; margin-right: 10px;}
+  </style>
+<%
+  @queries.each do |query|
+    if query[:has_tickets]
+%>
+  <h1 class="<%= query[:heading_class] %>"><%= query[:heading] %></h1>
+  <dl>
+<% query[:tickets].each do |ticket| %>
+      <dt><strong>[<%= ticket.project.name %> #<%= ticket.attributes.id.to_s %>]</strong> <%= ticket.attributes.title %></dt>
+      <dd><strong>Assigned to</strong>: <%= Lighthouse::User.find(ticket.attributes.assigned_user_id).name %></dd>
+      <dd><strong>Age</strong>: <%= distance_of_time_in_words_to_now(Time.parse(ticket.attributes.created_at.to_s)) %></dd>
+      <dd><strong>Last Activity</strong>: <%= distance_of_time_in_words_to_now(Time.parse(ticket.attributes.updated_at.to_s)) %></dd>
+<% unless ticket.attributes.milestone_id.blank? || ticket.milestone.blank? %>
+      <dd><strong>Milestone</strong>: <%= ticket.milestone.title %> (due on <%= ticket.milestone.due_on.strftime("%m/%d/%Y") %>)</dd>
+<% end %>
+<% unless ticket.attributes.tags.blank? %>
+      <dd><strong>Tags</strong>: <%= ticket.attributes.tags.join(", ") %></dd>
+<% end %>
+      <dd class="last">
+        <a href="<%= Page::BASE_URL %>/projects/<%= ticket.project.id %>">View Project</a>
+        <a href="<%= Page::BASE_URL %>/projects/<%= ticket.project.id %>/tickets/<%= ticket.attributes.id %>">View Ticket</a>
+<% unless ticket.attributes.milestone_id.blank? %>
+        <a href="<%= Page::BASE_URL %>/projects/<%= ticket.project.id %>/milestones/<%= ticket.attributes.milestone_id %>">View Milestone</a>
+<% end %>
+      </dd>
+
+<% end %>
+  </dl>
+<%
+    else
+%>
+  <p>There are no <%= query[:heading] %>.</p>
+<%
+    end
+  end
+%>
+</body>
+</html>
