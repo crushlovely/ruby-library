@@ -3,10 +3,15 @@
 #  Created by PJ Kelly on 2008-03-25
 #  Copyright (c) 2008. All rights reserved.
 
-require File.dirname(__FILE__) + '/lighthouse'
+require 'rubygems'
+require 'action_controller'
+require 'action_view'
+require 'action_mailer'
+include ActionView::Helpers::DateHelper
+
+require 'lighthouse-api'
 require File.dirname(__FILE__) + '/page'
 require 'optparse'
-include ActionView::Helpers::DateHelper
 
 Lighthouse.account = 'boomdesigngroup'
 Lighthouse.token = 'e8ac583a35003394a39b49c7947143afab20b6ca'
@@ -28,7 +33,7 @@ end
 @projects = Lighthouse::Project.find(:all)
 
 @responsible_parties = [
-  { :responsible => ' responsible:any', :recipients => ['pj@boomdesigngroup.com', 'ken@boomdesigngroup.com'], :subject => 'All Open and Recently Closed Tickets' },
+  { :responsible => ' responsible:any', :recipients => ['pj@boomdesigngroup.com', 'michael@boomdesigngroup.com', 'ken@boomdesigngroup.com'], :subject => 'All Open and Recently Closed Tickets' },
   { :responsible => ' responsible:"pj kelly"', :recipients => 'pj@boomdesigngroup.com', :subject => 'Your Open Tickets' },
   { :responsible => ' responsible:"michael yuan"', :recipients => 'michael@boomdesigngroup.com', :subject => 'Your Open Tickets' },
   { :responsible => ' responsible:"mase"', :recipients => 'mason@boomdesigngroup.com', :subject => 'Your Open Tickets' },

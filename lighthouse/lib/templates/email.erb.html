@@ -31,10 +31,7 @@
       <dd><strong>Age</strong>: <%= distance_of_time_in_words_to_now(Time.parse(ticket.attributes.created_at.to_s)) %></dd>
       <dd><strong>Last Activity</strong>: <%= distance_of_time_in_words_to_now(Time.parse(ticket.attributes.updated_at.to_s)) %></dd>
 <% unless ticket.attributes.milestone_id.blank? || ticket.milestone.blank? %>
-      <dd><strong>Milestone</strong>: <%= ticket.milestone.title %> (due on <%= ticket.milestone.due_on.strftime("%m/%d/%Y") %>)</dd>
-<% end %>
-<% unless ticket.attributes.tags.blank? %>
-      <dd><strong>Tags</strong>: <%= ticket.attributes.tags.join(", ") %></dd>
+      <dd><strong>Milestone</strong>: <%= ticket.milestone.title %> (due <%= ticket.milestone.attributes['due_on'] %>)</dd>
 <% end %>
       <dd class="last">
         <a href="<%= Page::BASE_URL %>/projects/<%= ticket.project.id %>">View Project</a>
